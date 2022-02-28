@@ -17,8 +17,6 @@ public class Topic_01_Template {
 		System.setProperty("webdriver.gecko.driver", projectPath + "/browserdriver/geckodriver");
 		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.manage().window().maximize();
-		driver.get("");
 	}
 
 	@Test
