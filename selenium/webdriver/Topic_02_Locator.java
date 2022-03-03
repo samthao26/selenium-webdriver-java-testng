@@ -29,7 +29,7 @@ public class Topic_02_Locator {
 	@Test
 	public void TC_01_() {
 		// selenium Locator (By class) class là file, trong class có thể là biến hoặc hàm
-		//id 
+		//id : 
         driver.findElement(By.id("firstname")).sendKeys("sam");
         sleepInSecond(3);
         // Name 
