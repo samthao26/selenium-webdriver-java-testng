@@ -1,10 +1,12 @@
 package webdriver;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Sleeper;
 import org.testng.Assert;
@@ -12,16 +14,21 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 public class Topic_10_Alert {
     WebDriver driver;
     Alert alert;
     
 	String projectPath = System.getProperty("user.dir");
+	String authenChrome = projectPath + "\\autoITScripts\\authen_chrome.exe";
+	String authenFirefox = projectPath + "\\autoITScripts\\authen_firefox.exe";
+	
 
 	@BeforeClass
 	public void beforeClass() {
-		System.setProperty("webdriver.gecko.driver", projectPath + "/browserdriver/geckodriver");
-		driver = new FirefoxDriver();
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 	}
@@ -88,7 +95,7 @@ public class Topic_10_Alert {
 		
 		
 	}
-	@Test
+	
 	public void TC_04_Authentication_Alert_II() {
 		String username = "admin";
 		String password = "admin";
@@ -110,6 +117,28 @@ public class Topic_10_Alert {
 		
 		
 	}
+	
+	@Test
+	public void TC_04_Authentication_Alert_AutoIT() throws IOException {
+		String username = "admin";
+		String password = "admin";
+		driver.get("http://the-internet.herokuapp.com/");
+		// Script se chay trc de cho AUthen bat len sau 
+		if(driver.toString().contains("firefox")) {
+		Runtime.getRuntime().exec(new String[] {authenFirefox, username, password});
+		} else if(driver.toString().contains("chrome")) {
+			Runtime.getRuntime().exec(new String[] {authenChrome, username, password});
+		}
+		
+		 
+		driver.findElement(By.xpath("//a[text()='Basic Auth']")).click();
+		sleepInSecond(8);
+		
+		Assert.assertTrue(driver.findElement(By.xpath("//p[contains(text(),'Congratulations! You must have the proper credentials.')]")).isDisplayed());
+		
+			
+		
+	}
 	public String getAuthenticateLink(String url, String username, String password) {
 		String[] links = url.split("//");
 		url = links[0] + "//" + "//" + username + ":" + password + "@" + links[1];
@@ -118,6 +147,7 @@ public class Topic_10_Alert {
 		
 		
 	}
+	
 
 	@AfterClass
 	public void afterClass() {
